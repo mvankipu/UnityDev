@@ -14,6 +14,9 @@ public class Pattern
 
 	PatternState pState; //Patern State Manager
 
+	//Global variable tracking the current active pattern item
+	int activePatternItem;
+
 	float activeDuration; //How long is a pattern item active?
 	float intervalDuration; //How long is the pattern interval?
 
@@ -22,9 +25,7 @@ public class Pattern
 	float patternOnTime; //Tracking time that pattern item is "ON"	
 	float patternOffTime; //Tracking time that the pattern is "OFF"
 
-	//Global variable tracking the current active pattern item
-	int activePatternItem;
-
+	
 	//Global variable to track pattern item related to checking user input
 	int inputCheckVarItem;
 
@@ -37,6 +38,8 @@ public class Pattern
         {
 			patternList[i] = UnityEngine.Random.Range(rangeMin, rangeMax + 1);
 		}
+
+		activePatternItem = 1;
 	}
 	
 	public void startPattern(float onTime = 2.0f, float offTime = 1.0f)
@@ -51,6 +54,7 @@ public class Pattern
 
 		//Count Down Timer variables are set
 		patternOnTime = activeDuration;
+
 		//patternOffTime = intervalDuration;
 		pState = PatternState.ActiveDisplay;
 
@@ -59,7 +63,12 @@ public class Pattern
 		//UnityEngine.Debug.Log(patternList[activePatternItem - 1].ToString());
 	}
 
-	
+	public int GetActivePatternItem()
+    {
+		return activePatternItem;
+    }
+
+/*	
 	public int getActivePatternItem(float deltaTime)
     /**
 	Return 0 if state is interval
@@ -69,7 +78,7 @@ public class Pattern
 	this finction returns the step in the pattern list that is active.
 	NOTE: This is not the actual item, just the step in the pattern list.
 	*/
-	{
+/*	{
 		if(pState == PatternState.ActiveDisplay)
         {
 			patternOnTime -= deltaTime;
@@ -106,13 +115,14 @@ public class Pattern
 		}
 		//return activePatternItem;
     }
+*/
 
 	public int getLength()
     {
 		return patternList.Length;
     }
 
-	public int getActivePatternListItem()
+	public int GetActivePatternListItem()
 	/**
 	Returns value of item that is currently active in the pattern
 	Should only be called when the state is active
@@ -122,13 +132,13 @@ public class Pattern
 		//UnityEngine.Debug.Log(index.ToString());
 		//return patternList[index-1];
 
-		if (pState == PatternState.ActiveDisplay)
-			return patternList[activePatternItem - 1];
-		else
-			throw new ArgumentException("Pattern state is not active.");
+		//if (pState == PatternState.ActiveDisplay)
+		return patternList[activePatternItem - 1];
+		//else
+		//	throw new ArgumentException("Pattern state is not active.");
     }
 
-	public void print()
+	public void Print()
 	/**
 	Prints the pattern when asked like a boss
 	**/
@@ -138,6 +148,31 @@ public class Pattern
 		{
 			temp += patternList[i].ToString() + " ";
 		}
+		//temp += ": Parameters passed = ( " + patternList.Length.ToString() + " , " + patternList.Min().ToString() + " , " + patternList.Max().ToString() + ")"; 
+		UnityEngine.Debug.Log(temp);
+	}
+
+	public void Print(int testLength)
+	/**
+	Prints the pattern when asked like a boss
+	**/
+	{
+		string temp = "Pattern = ";
+
+		if(testLength<patternList.Length)
+        {
+			for (int i = 0; i < testLength; i++)
+			{
+				temp += patternList[i].ToString() + " ";
+			}
+		}
+		else
+        {
+			for (int i = 0; i < patternList.Length; i++)
+			{
+				temp += patternList[i].ToString() + " ";
+			}
+		}		
 		//temp += ": Parameters passed = ( " + patternList.Length.ToString() + " , " + patternList.Min().ToString() + " , " + patternList.Max().ToString() + ")"; 
 		UnityEngine.Debug.Log(temp);
 	}
@@ -155,6 +190,14 @@ public class Pattern
         }
 		else
 			return false;
+    }
+
+	public int GetItemAtIndex(int index)
+    {
+		if (index >= 0 && index < patternList.Length)
+			return patternList[index];
+		else
+			return -1;
     }
 
 	public void setInputCheckVar()
@@ -181,4 +224,28 @@ public class Pattern
 			return false;
         }
     }
+
+	public void StepPattern()
+    {
+		activePatternItem++;
+    }
+
+	public bool IsComplete(int testlength)
+    {
+		if (activePatternItem > testlength)
+			return true;
+		else if (activePatternItem > patternList.Length)
+			return true;
+		else
+			return false;
+	}
+
+	public void ResetPattern()
+    {
+		//patternOffTime = intervalDuration;
+		pState = PatternState.ActiveDisplay;
+
+		//set active pattern item to the start of the list (1...N)
+		activePatternItem = 1;
+	}
 }

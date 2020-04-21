@@ -58,7 +58,7 @@ public class FourBlocks : MonoBehaviour
 
         //TODO Move this to the event handler for the start button when implemented
         testPattern.startPattern();
-        testPattern.print();
+        testPattern.Print();
         
         currentState = GameState.Ready;
     }
@@ -75,7 +75,8 @@ public class FourBlocks : MonoBehaviour
         if(currentState == GameState.Ready)
         {
             //Display Pattern
-            int currentPatternItem = testPattern.getActivePatternItem(Time.deltaTime);
+            //int currentPatternItem = testPattern.getActivePatternItem(Time.deltaTime);
+            int currentPatternItem = 1;
 
             //TODO Set all cube materials to default
             GameObject.Find("Cube1").GetComponent<Renderer>().material = blockColors[(int)BlockColors.Red_Dark]; //Resources.Load<Material>("Red1");
@@ -96,7 +97,8 @@ public class FourBlocks : MonoBehaviour
             else
             {
                 //UnityEngine.Debug.Log(currentPatternItem.ToString());
-                int blockId = testPattern.getActivePatternListItem();
+                //int blockId = testPattern.getActivePatternListItem();
+                int blockId = 1;
 
                 if (blockId == 1)
                 {
